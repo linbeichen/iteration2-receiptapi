@@ -1,0 +1,8 @@
+fastapi[all]
+requests
+uvicorn
+python-multipart
+aiocron
+aiohttp
+numpy
+rapidfuzz
