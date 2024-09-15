@@ -58,7 +58,7 @@ def get_category(Categories, group):
 def get_quantity(input_text):
     input_quantity = input_text.split(" ")[-1]
     if input_quantity == "":
-        return "",""
+        return "", ""
     elif input_quantity[0] in ['0','1','2','3','4','5','6','7','8','9']: #if the last text is quantity - get value and untis
         return(re.sub("[a-zA-Z//]*", "", input_quantity), (re.sub("[0-9\\.]*", "", input_quantity)).lower())
     elif input_quantity == "pack":
@@ -74,7 +74,7 @@ def get_info(pattern, Categories, product_groups, input_text):
     
     #remove quantity
     #"[0-9]*pk|[0-9]*mg|[0-9]*gms|[0-9]*kg|[0-9]*ml|[0-9]*l"
-    quantityValue, unit = "".join(get_quantity(input_text))
+    quantityValue, unit = get_quantity(input_text)
     quantity = quantityValue + unit
     input_text = re.sub(quantity, "", input_text)
     #print("quantity:", quantity)
