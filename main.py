@@ -49,7 +49,7 @@ mindee_api_key = "413c3140cb93daff17536ec583083000"
 
 # the function required to get category of item
 def get_category(Categories, group):
-    for key,val in Categories.items():  # for name, age in dictionary.iteritems():  (for Python 2.x)
+    for key,val in Categories.items():  
         if group in val:
             return(key)
     return("Other")
@@ -74,7 +74,8 @@ def get_info(pattern, Categories, product_groups, input_text):
     
     #remove quantity
     #"[0-9]*pk|[0-9]*mg|[0-9]*gms|[0-9]*kg|[0-9]*ml|[0-9]*l"
-    quantity = "".join(get_quantity(input_text))
+    quantityValue, unit = "".join(get_quantity(input_text))
+    quantity = quantityValue + unit
     input_text = re.sub(quantity, "", input_text)
     #print("quantity:", quantity)
     
@@ -89,7 +90,8 @@ def get_info(pattern, Categories, product_groups, input_text):
     
     #return(f"Best match product group: {best_match[0]} with a confidence of {best_match[1]}")
     #print(f"product group: {best_match[0]}")
-    return {"item": cleaned_text.title(), "category": get_category(Categories, best_match[0]), "quantity": quantity}
+    return {"item": cleaned_text.title(), "category": get_category(Categories, best_match[0]), "quantity": quantity, "quantityValue": quantityValue, "unit": unit}
+    # return {"item": cleaned_text.title(), "category": get_category(Categories, best_match[0]), "quantity": quantity, "product_group": best_match[0]}
     #"product group": best_match[0]
 
 @app.post("/upload/")
@@ -112,7 +114,7 @@ async def create_upload_file(uploaded_file: UploadFile = File(...)):
         logger.info(f"OCR Service Response content: {r.text[:200]}...")  # 记录响应的前200个字符
 
         r.raise_for_status()  # 如果响应状态码不是200，将引发异常
-        data = r.json()
+        data = r.json() 
 
         #extract the proper item name, quantity and category
         #files needed to extract values are below;
