@@ -23,7 +23,7 @@ async def is_active_hours():
 @aiocron.crontab('*/10 * * * *')
 async def self_ping():
     async with aiohttp.ClientSession() as session:
-        async with session.get('https://recieptapi.onrender.com/health') as response:
+        async with session.get('https://iteration2-receiptapi.onrender.com/health') as response:
             print(f"Health check response: {response.status}")
    
 @app.on_event("startup")
