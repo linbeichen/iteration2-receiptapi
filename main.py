@@ -90,7 +90,7 @@ def get_info(pattern, Categories, product_groups, input_text):
     
     #return(f"Best match product group: {best_match[0]} with a confidence of {best_match[1]}")
     #print(f"product group: {best_match[0]}")
-    return {"item": cleaned_text.title(), "category": get_category(Categories, best_match[0]), "quantity": quantity, "quantityValue": quantityValue, "unit": unit}
+    return {"item": cleaned_text.title(), "category": get_category(Categories, best_match[0]), "quantity": quantity, "quantityValue": quantityValue, "unit": unit, "source": 'scan', "product_group": best_match[0]}
     # return {"item": cleaned_text.title(), "category": get_category(Categories, best_match[0]), "quantity": quantity, "product_group": best_match[0]}
     #"product group": best_match[0]
 
