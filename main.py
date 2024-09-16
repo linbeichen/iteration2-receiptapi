@@ -87,7 +87,9 @@ def get_info(pattern, Categories, product_groups, input_text):
     
     #extract category
     best_match = process.extractOne(cleaned_text, product_groups)
-    print("Category:", get_category(best_match[0]) )
+    print(best_match)
+    print(type(best_match))
+    print("best matched product group: " + best_match[0])
     
     print(f"Best match product group: {best_match[0]} with a confidence of {best_match[1]}")
     
