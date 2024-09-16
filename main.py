@@ -83,6 +83,7 @@ def get_info(pattern, Categories, product_groups, input_text):
     # Create a regex pattern to match the brands (case insensitive)
     cleaned_text = re.sub(pattern, '', input_text).strip()
     print("clean_text:", cleaned_text)
+    print(len(cleaned_text))
     
     #extract category
     best_match = process.extractOne(cleaned_text, product_groups)
