@@ -51,8 +51,8 @@ mindee_api_key = "413c3140cb93daff17536ec583083000"
 def get_category(Categories, group):
     for key,val in Categories.items():  
         if group in val:
-            return(key)
-    return("Other")
+            return key
+    return "Other"
 
 #get quantity info
 def get_quantity(input_text):
@@ -82,7 +82,7 @@ def get_info(pattern, Categories, product_groups, input_text):
     #remove brand
     # Create a regex pattern to match the brands (case insensitive)
     cleaned_text = re.sub(pattern, '', input_text).strip()
-    print("item:", cleaned_text)
+    print("clean_text:", cleaned_text)
     
     #extract category
     best_match = process.extractOne(cleaned_text, product_groups)
