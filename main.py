@@ -77,19 +77,19 @@ def get_info(pattern, Categories, product_groups, input_text):
     quantityValue, unit = get_quantity(input_text)
     quantity = quantityValue + unit
     input_text = re.sub(quantity, "", input_text)
-    #print("quantity:", quantity)
+    print("quantity:", quantity)
     
     #remove brand
     # Create a regex pattern to match the brands (case insensitive)
     cleaned_text = re.sub(pattern, '', input_text).strip()
-    #print("item:", cleaned_text)
+    print("item:", cleaned_text)
     
     #extract category
     best_match = process.extractOne(cleaned_text, product_groups)
-    #print("Category:", get_category(best_match[0]) )
+    print("Category:", get_category(best_match[0]) )
     
-    #return(f"Best match product group: {best_match[0]} with a confidence of {best_match[1]}")
-    #print(f"product group: {best_match[0]}")
+    print(f"Best match product group: {best_match[0]} with a confidence of {best_match[1]}")
+    
     return {"item": cleaned_text.title(), "category": get_category(Categories, best_match[0]), "quantity": quantity, "quantityValue": quantityValue, "unit": unit, "source": 'scan', "product_group": best_match[0]}
     # return {"item": cleaned_text.title(), "category": get_category(Categories, best_match[0]), "quantity": quantity, "product_group": best_match[0]}
     #"product group": best_match[0]
