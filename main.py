@@ -71,7 +71,8 @@ def get_quantity(input_text):
 # Remove any brand name from the text
 def get_info(pattern, Categories, product_groups, input_text):
     input_text = input_text.lower()
-    
+    print('input_text:' + input_text)
+        
     #remove quantity
     #"[0-9]*pk|[0-9]*mg|[0-9]*gms|[0-9]*kg|[0-9]*ml|[0-9]*l"
     quantityValue, unit = get_quantity(input_text)
