@@ -69,6 +69,7 @@ def get_quantity(input_text):
 # Remove any brand name from the text
 #and get item name, category and quantity
 # Remove any brand name from the text
+'''
 def get_info(pattern, Categories, product_groups, input_text):
     input_text = input_text.lower()
     print('input_text:' + input_text)
@@ -96,6 +97,38 @@ def get_info(pattern, Categories, product_groups, input_text):
     
     return {"item": cleaned_text.title(), "category": get_category(Categories, best_match[0]), "quantity": quantity, "quantityValue": quantityValue, "unit": unit, "source": 'scan', "product_group": best_match[0]}
     # return {"item": cleaned_text.title(), "category": get_category(Categories, best_match[0]), "quantity": quantity, "product_group": best_match[0]}
+    #"product group": best_match[0]
+'''
+# Remove any brand name from the text
+def get_info(pattern, Categories, product_groups, input_text):
+    input_text = input_text.lower()
+   
+    #remove quantity
+    #"[0-9]*pk|[0-9]*mg|[0-9]*gms|[0-9]*kg|[0-9]*ml|[0-9]*l"
+    quantityValue, unit = get_quantity(input_text)
+    quantity = quantityValue + unit
+    input_text = re.sub(quantity, "", input_text)
+    #print("quantity:", quantity)
+   
+    #remove brand
+    # Create a regex pattern to match the brands (case insensitive)
+    cleaned_text = re.sub(pattern, '', input_text).strip()
+    #print("item:", cleaned_text)
+   
+    #extract category
+    #best_match = process.extractOne(cleaned_text, product_groups)
+    #print("Category:", get_category(best_match[0]) )
+     # Direct regex match for product groups
+    best_match = ""
+ 
+    for group in product_groups:
+        if re.search(r'\b' + group + r'\b', cleaned_text):
+            best_match = group
+            break
+   
+    #return(f"Best match product group: {best_match[0]} with a confidence of {best_match[1]}")
+    #print(f"product group: {best_match[0]}")
+    return {"item": cleaned_text.title(), "category": get_category(Categories, best_match), "quantity": quantity, "quantityValue":quantityValue, "unit": unit, "source": 'scan', "product-group": best_match}
     #"product group": best_match[0]
 
 @app.post("/upload/")
