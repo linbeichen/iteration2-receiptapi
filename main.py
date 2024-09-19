@@ -66,7 +66,7 @@ def get_expiry_date(food_name, food_group):
         matched_str, score, index = best_match
         food_item = food_data[food_data['Name'] == matched_str]
         if not food_item.empty:
-            days_until_expiry = food_item['Days Until Expiry'].values[0]
+            days_until_expiry = int(food_item['Days Until Expiry'].values[0])
             first_time = datetime.now() + timedelta(days=days_until_expiry)
             return first_time.strftime("%Y-%m-%d")
         else:
@@ -74,7 +74,7 @@ def get_expiry_date(food_name, food_group):
             if second_match:
                 second_food_item = food_data[food_data['Name'] == second_match[0]]
                 if not second_food_item:
-                    days2 = second_food_item['Days Until Expiry'].value[0]
+                    days2 = int(second_food_item['Days Until Expiry'].value[0])
                     second_time = datetime.now() + timedelta(days=days2)
                     return second_time.strftime("%Y-%m-%d")
     return None    
