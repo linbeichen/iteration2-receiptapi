@@ -153,7 +153,7 @@ def get_info(pattern, Categories, product_groups, input_text):
    
     #return(f"Best match product group: {best_match[0]} with a confidence of {best_match[1]}")
     #print(f"product group: {best_match[0]}")
-    return {"item": cleaned_text.title(), "category": get_category(Categories, best_match), "quantity": quantity, "quantityValue":quantityValue, "unit": unit, "expirydate": get_expiry_date(cleaned_text, best_match), "source": 'scan', "product-group": best_match}
+    return {"item": cleaned_text.title(), "category": get_category(Categories, best_match), "quantity": quantity, "quantityValue":quantityValue, "unit": unit, "expirydate": get_expiry_date(cleaned_text, best_match), "source": 'scan', "product_group": best_match}
     #"product group": best_match[0]
 
 @app.post("/upload/")
