@@ -7,7 +7,7 @@ import logging
 # new package for cron task
 import aiocron
 import aiohttp
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
 # new package for recognize category and 
 import re
 import numpy as np
