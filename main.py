@@ -54,6 +54,30 @@ def get_category(Categories, group):
             return key
     return "Other"
 
+def load_food_data():
+    return pd.read_csv('FoodItemsList.csv')
+
+# the function to get expirydate
+def get_expiry_date(food_name, food_group):
+    food_data = load_food_data()
+    best_match = process.extractOne(food_name, food_data['Name'].tolist())
+    if best_match:
+        matched_str, score, index = best_match
+        food_item = food_data[food_data['Name'] == matched_str]
+        if not food_item.empty:
+            days_until_expiry = food_item['Days Until Expiry'].values[0]
+            first_time = datetime.now() + timedelta(days=days_until_expiry)
+            return first_time.strftime("%Y-%m-%d")
+        else:
+            second_match = process.extractOne(food_group, food['Name'].tolist())
+            if second_match:
+                second_food_item = food_data[food_data['Name'] == second_match[0]]
+                if not second_food_item:
+                    days2 = second_food_item['Days Until Expiry'].value[0]
+                    second_time = datetime.now() + timedelta(days=days2)
+                    return second_time.strftime("%Y-%m-%d")
+    return None    
+
 #get quantity info
 def get_quantity(input_text):
     input_quantity = input_text.split(" ")[-1]
@@ -108,12 +132,12 @@ def get_info(pattern, Categories, product_groups, input_text):
     quantityValue, unit = get_quantity(input_text)
     quantity = quantityValue + unit
     input_text = re.sub(quantity, "", input_text)
-    #print("quantity:", quantity)
+    print("quantity:", quantity)
    
     #remove brand
     # Create a regex pattern to match the brands (case insensitive)
     cleaned_text = re.sub(pattern, '', input_text).strip()
-    #print("item:", cleaned_text)
+    print("cleaned_text:", cleaned_text)
    
     #extract category
     #best_match = process.extractOne(cleaned_text, product_groups)
@@ -128,7 +152,7 @@ def get_info(pattern, Categories, product_groups, input_text):
    
     #return(f"Best match product group: {best_match[0]} with a confidence of {best_match[1]}")
     #print(f"product group: {best_match[0]}")
-    return {"item": cleaned_text.title(), "category": get_category(Categories, best_match), "quantity": quantity, "quantityValue":quantityValue, "unit": unit, "source": 'scan', "product-group": best_match}
+    return {"item": cleaned_text.title(), "category": get_category(Categories, best_match), "quantity": quantity, "quantityValue":quantityValue, "unit": unit, "expirydate": get_expiry_date(cleaned_text, best_match), "source": 'scan', "product-group": best_match}
     #"product group": best_match[0]
 
 @app.post("/upload/")
