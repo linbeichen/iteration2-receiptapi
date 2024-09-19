@@ -5,4 +5,5 @@ python-multipart
 aiocron
 aiohttp
 numpy
+pandas
 rapidfuzz

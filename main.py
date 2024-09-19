@@ -11,6 +11,7 @@ from datetime import datetime, time
 # new package for recognize category and 
 import re
 import numpy as np
+import pandas as pd
 from rapidfuzz import process
 
 app = FastAPI()
