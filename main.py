@@ -48,6 +48,15 @@ app.add_middleware(
 mindee_endpoint = "https://api.mindee.net/v1/products/mindee/expense_receipts/v5/predict"
 mindee_api_key = "413c3140cb93daff17536ec583083000"
 
+def get_item(item):
+    item_description = item.get('description', '')
+    item_cost = item.get('total_amount', 0)
+    newItem = {
+        'description':item_description,
+        'cost': item_cost
+    }
+    return newItem
+
 # the function required to get category of item
 def get_category(Categories, group):
     for key,val in Categories.items():  
@@ -156,6 +165,16 @@ def get_info(pattern, Categories, product_groups, input_text):
     return {"item": cleaned_text.title(), "category": get_category(Categories, best_match), "quantity": quantity, "quantityValue":quantityValue, "unit": unit, "expirydate": get_expiry_date(cleaned_text, best_match), "source": 'scan', "product_group": best_match}
     #"product group": best_match[0]
 
+
+def assemble_info(pattern, Categories, product_groups, original_list):
+    item_list = []
+    for i in range(len(original_list)):
+        processed_item = get_info(pattern, Categories, product_groups, original_list[i].get('description',''))
+        processed_item['cost'] = original_list[i]['cost']
+        item_list.append(processed_item)
+    return item_list
+
+
 @app.post("/upload/")
 async def create_upload_file(uploaded_file: UploadFile = File(...)):
     if not uploaded_file.filename.lower().endswith(('.jpg', '.jpeg', '.png')):
@@ -192,12 +211,16 @@ async def create_upload_file(uploaded_file: UploadFile = File(...)):
         if 'document' in data and 'inference' in data['document'] and 'prediction' in data['document']['inference']:
             line_items = data['document']['inference']['prediction'].get('line_items', [])
             #get item names
+            
+            intermediate_list = [get_item(item) for item in line_items ]
+            item_list = assemble_info(pattern, Categories, product_groups, intermediate_list)
+            '''
             item_names = [item.get('description', '') for item in line_items ]
             #item_list = [{"item": item.get('description', '')} for item in line_items ]
             item_list = []
             for i in range(len(item_names)):
                 item_list.append(get_info(pattern, Categories, product_groups, item_names[i]))
-        
+            '''
         return {"item_list": item_list}
         
     except requests.RequestException as e:
