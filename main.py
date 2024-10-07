@@ -100,39 +100,7 @@ def get_quantity(input_text):
     else: #if the last text is not a quantity return empty 
         return "", ""
     
-# Remove any brand name from the text
-#and get item name, category and quantity
-# Remove any brand name from the text
-'''
-def get_info(pattern, Categories, product_groups, input_text):
-    input_text = input_text.lower()
-    print('input_text:' + input_text)
-        
-    #remove quantity
-    #"[0-9]*pk|[0-9]*mg|[0-9]*gms|[0-9]*kg|[0-9]*ml|[0-9]*l"
-    quantityValue, unit = get_quantity(input_text)
-    quantity = quantityValue + unit
-    input_text = re.sub(quantity, "", input_text)
-    print("quantity:", quantity)
-    
-    #remove brand
-    # Create a regex pattern to match the brands (case insensitive)
-    cleaned_text = re.sub(pattern, '', input_text).strip()
-    print("clean_text:", cleaned_text)
-    print(len(cleaned_text))
-    
-    #extract category
-    best_match = process.extractOne(cleaned_text, product_groups)
-    print(best_match)
-    print(type(best_match))
-    print("best matched product group: " + best_match[0])
-    
-    print(f"Best match product group: {best_match[0]} with a confidence of {best_match[1]}")
-    
-    return {"item": cleaned_text.title(), "category": get_category(Categories, best_match[0]), "quantity": quantity, "quantityValue": quantityValue, "unit": unit, "source": 'scan', "product_group": best_match[0]}
-    # return {"item": cleaned_text.title(), "category": get_category(Categories, best_match[0]), "quantity": quantity, "product_group": best_match[0]}
-    #"product group": best_match[0]
-'''
+
 # Remove any brand name from the text
 def get_info(pattern, Categories, product_groups, input_text):
     input_text = input_text.lower()
@@ -169,9 +137,12 @@ def get_info(pattern, Categories, product_groups, input_text):
 def assemble_info(pattern, Categories, product_groups, original_list):
     item_list = []
     for i in range(len(original_list)):
-        processed_item = get_info(pattern, Categories, product_groups, original_list[i].get('description',''))
-        processed_item['cost'] = original_list[i]['cost']
-        item_list.append(processed_item)
+        try:
+            processed_item = get_info(pattern, Categories, product_groups, original_list[i].get('description',''))
+            processed_item['cost'] = original_list[i]['cost']
+            item_list.append(processed_item)
+        except Exception as e:
+            print(f"Error when handling item: {str(e)}. Skip this item.")
     return item_list
 
 
@@ -214,13 +185,6 @@ async def create_upload_file(uploaded_file: UploadFile = File(...)):
             
             intermediate_list = [get_item(item) for item in line_items ]
             item_list = assemble_info(pattern, Categories, product_groups, intermediate_list)
-            '''
-            item_names = [item.get('description', '') for item in line_items ]
-            #item_list = [{"item": item.get('description', '')} for item in line_items ]
-            item_list = []
-            for i in range(len(item_names)):
-                item_list.append(get_info(pattern, Categories, product_groups, item_names[i]))
-            '''
         return {"item_list": item_list}
         
     except requests.RequestException as e:
